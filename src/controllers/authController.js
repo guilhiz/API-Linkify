@@ -1,12 +1,13 @@
 import db from "../database/database.js";
-import bcrypt from "bcrypt"
-import { v4 as uuid } from 'uuid';
+import hashPassword from "../utils/hashPassword.js";
+import internalError from "../utils/internalError.js";
+import { valueAlreadyExistsError } from "../utils/postgresErrorCodes.js";
 import { createUser } from "../repositories/userRepository.js";
 
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-  const encryptedPassword = bcrypt.hashSync(password, 10);
-  console.log(chalk.cyan('POST /users'));
+  const encryptedPassword = hashPassword(password);
+  console.log(chalk.cyan("POST /users"));
 
   try {
     const { rowCount } = await db.query(createUser(), [name, email, encryptedPassword]);
@@ -15,7 +16,10 @@ export const registerUser = async (req, res) => {
 
     res.sendStatus(500);
   } catch (error) {
-    if (error.constraint === "users_email_key") return res.status(409).send({ error: "Email already exists" });
-    return res.status(500);
+    if (error.code === valueAlreadyExistsError) {
+      return res.status(409).send({ error: "Email already exists" });
+    }
+
+    internalError(error, res);
   }
 };
