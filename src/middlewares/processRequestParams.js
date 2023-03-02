@@ -1,4 +1,4 @@
-import sanitizeObject from "../utils/sanitizeObject";
+import sanitizeObject from "../utils/sanitizeObject.js";
 
 const processRequestParams = (schema) => {
   return (req, res, next) => {
