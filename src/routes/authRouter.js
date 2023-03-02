@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { registerUser } from "../controllers/authController.js";
+import { signUp, signIn } from "../controllers/authController.js";
 import processRequestParams from "../middlewares/processRequestParams.js";
-import signUpSchema from "../schemas/signUpSchema.js";
+import { signUpSchema, signInSchema } from "../schemas/authSchema.js";
 
 const authRouter = Router()
 
-authRouter.post("/signup", processRequestParams(signUpSchema), registerUser)
+authRouter.post("/signup", processRequestParams(signUpSchema), signUp)
+
+authRouter.post("/signin", processRequestParams(signInSchema), signIn)
 
 export default authRouter
