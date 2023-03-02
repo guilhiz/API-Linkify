@@ -1,6 +1,7 @@
 export const createUrl = () => `
-  INSERT INTO urls (url, short_url, user_id )
+  INSERT INTO urls (url, "shortUrl", "userId" )
   VALUES ($1, $2, $3)
+  RETURNING id
 `
 
 export const getUrlById = () => `

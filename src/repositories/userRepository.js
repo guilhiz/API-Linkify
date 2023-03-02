@@ -8,6 +8,12 @@ export const getUserByEmail = () => `
   WHERE users.email = $1
 `;
 
+export const getUserIdByToken = () => `
+  SELECT * FROM sessions
+  WHERE token = $1
+  AND active = TRUE
+`;
+
 export const createToken = () => `
   INSERT INTO sessions ("userId", token)
   VALUES ($1, $2);
