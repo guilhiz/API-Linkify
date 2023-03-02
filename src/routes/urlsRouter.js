@@ -1,14 +1,15 @@
 import { Router } from "express";
-import { shortenUrl } from "../controllers/urlsController.js";
+import { shortenUrl, getUrl } from "../controllers/urlsController.js";
 import processRequestParams from "../middlewares/processRequestParams.js";
 import { tokenValidate } from "../middlewares/tokenValidate.js";
-import { urlSchema } from "../schemas/urlSchema.js";
+import { urlSchema, listUrl } from "../schemas/urlSchema.js";
 
+const urlRouter = Router();
 
-const urlRouter = Router()
+urlRouter.get("/urls/:id", processRequestParams(listUrl), getUrl);
 
-urlRouter.use(tokenValidate)
+urlRouter.use(tokenValidate);
 
-urlRouter.post("/urls/shorten", processRequestParams(urlSchema), shortenUrl)
+urlRouter.post("/urls/shorten", processRequestParams(urlSchema), shortenUrl);
 
-export default urlRouter
+export default urlRouter;
