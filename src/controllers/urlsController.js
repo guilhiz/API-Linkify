@@ -2,19 +2,22 @@ import { nanoid } from "nanoid";
 import internalError from "../utils/internalError.js";
 import chalk from "chalk";
 import db from "../database/database.js";
-import { getUserIdByToken } from "../repositories/userRepository.js";
-import { createUrl, getUrlById, getUrlByShortUrl, incrementVisitCount } from "../repositories/urlsRepository.js";
+import {
+  createUrl,
+  getUrlById,
+  getUrlByShortUrl,
+  incrementVisitCount,
+  deleteUrlById,
+} from "../repositories/urlsRepository.js";
 
 export const shortenUrl = async (req, res) => {
   const { url } = req.Params;
-  const { token } = res.locals;
+  const { user } = res.locals;
   const shortUrl = nanoid(8, url);
   console.log(chalk.cyan("POST /urls/shorten"));
 
   try {
-    const { rows: user } = await db.query(getUserIdByToken(), [token]);
-
-    const { rows } = await db.query(createUrl(), [url, shortUrl, user[0].userId]);
+    const { rows } = await db.query(createUrl(), [url, shortUrl, user.id]);
 
     return res.status(201).send({ id: rows[0].id, shortUrl });
   } catch (error) {
@@ -41,12 +44,32 @@ export const openUrl = async (req, res) => {
 
   try {
     const { rows, rowCount } = await db.query(getUrlByShortUrl(), [shortUrl]);
+    if (rowCount < 1) return res.sendStatus(404);
 
-    if(rowCount < 1) return res.sendStatus(404)
+    await db.query(incrementVisitCount(), [rows[0].url]);
 
-    await db.query(incrementVisitCount(), [rows[0].url])
-    console.log(rowCount, rows[0].url)
-    return res.redirect(rows[0].url)
+    return res.redirect(rows[0].url);
+  } catch (error) {
+    internalError(error, res);
+  }
+};
+
+export const deleteUrl = async (req, res) => {
+  const { id } = req.Params;
+  const { user } = res.locals;
+  console.log(chalk.cyan("delete /urls/:id"));
+
+  try {
+    const { rows: url, rowCount } = await db.query(getUrlById(), [id]);
+    if (rowCount < 1) return res.sendStatus(404);
+
+
+    const isUnauthorizedToDeleteUrl = url[0].userId !== user.id;
+    if (isUnauthorizedToDeleteUrl) return res.sendStatus(401);
+
+    await db.query(deleteUrlById(), [id]);
+
+    return res.sendStatus(204);
   } catch (error) {
     internalError(error, res);
   }
