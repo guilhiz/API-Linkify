@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { shortenUrl, getUrl } from "../controllers/urlsController.js";
+import { shortenUrl, getUrl, openUrl } from "../controllers/urlsController.js";
 import processRequestParams from "../middlewares/processRequestParams.js";
 import { tokenValidate } from "../middlewares/tokenValidate.js";
-import { urlSchema, listUrl } from "../schemas/urlSchema.js";
+import { urlSchema, listUrl, shortUrl } from "../schemas/urlSchema.js";
 
 const urlRouter = Router();
 
 urlRouter.get("/urls/:id", processRequestParams(listUrl), getUrl);
+urlRouter.get("/urls/open/:shortUrl", processRequestParams(shortUrl), openUrl)
 
 urlRouter.use(tokenValidate);
 

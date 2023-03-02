@@ -3,7 +3,7 @@ import internalError from "../utils/internalError.js";
 import chalk from "chalk";
 import db from "../database/database.js";
 import { getUserIdByToken } from "../repositories/userRepository.js";
-import { createUrl, getUrlById } from "../repositories/urlsRepository.js";
+import { createUrl, getUrlById, getUrlByShortUrl, incrementVisitCount } from "../repositories/urlsRepository.js";
 
 export const shortenUrl = async (req, res) => {
   const { url } = req.Params;
@@ -30,6 +30,23 @@ export const getUrl = async (req, res) => {
     const { rows: url } = await db.query(getUrlById(), [id]);
 
     return res.status(200).send({ id: url[0].id, shortUrl: url[0].shortUrl, url: url[0].url });
+  } catch (error) {
+    internalError(error, res);
+  }
+};
+
+export const openUrl = async (req, res) => {
+  const { shortUrl } = req.Params;
+  console.log(chalk.cyan("GET /urls/open/:shortUrl"));
+
+  try {
+    const { rows, rowCount } = await db.query(getUrlByShortUrl(), [shortUrl]);
+
+    if(rowCount < 1) return res.sendStatus(404)
+
+    await db.query(incrementVisitCount(), [rows[0].url])
+    console.log(rowCount, rows[0].url)
+    return res.redirect(rows[0].url)
   } catch (error) {
     internalError(error, res);
   }

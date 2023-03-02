@@ -7,3 +7,7 @@ export const urlSchema = Joi.object({
 export const listUrl = Joi.object({
   id: Joi.string().required().min(1),
 });
+
+export const shortUrl = Joi.object({
+  shortUrl: Joi.string().required(),
+});
