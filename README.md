@@ -15,6 +15,7 @@ Linkify é uma API Node.js que permite encurtar URLs, mantendo um registro de vi
    - Arquitetura em camadas (controllers, middlewares, services, etc)
    - Classificação de usuários pelo número de visitas em todas as URLs
    - Todas as entradas são validadas contra esquemas (usando um middleware)
+   - Segurança reforçada com o uso da biblioteca Helmet do Node.js
 
 ## :robot: Tecnologias Utilizadas
 
@@ -52,6 +53,4 @@ Linkify é uma API Node.js que permite encurtar URLs, mantendo um registro de vi
 └── 📄package.json
 
 ```
-
-## :eyes: [Deploy](api-lake-shore.vercel.app/)
 
