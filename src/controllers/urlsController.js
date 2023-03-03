@@ -32,7 +32,9 @@ export const getUrl = async (req, res) => {
   console.log(chalk.cyan("GET /urls/:id"));
 
   try {
-    const { rows: url } = await db.query(getUrlById(), [id]);
+    const { rows: url, rowCount } = await db.query(getUrlById(), [id]);
+
+    if(rowCount === 0) return res.sendStatus(404)
 
     return res.status(200).send({ id: url[0].id, shortUrl: url[0].shortUrl, url: url[0].url });
   } catch (error) {
@@ -64,7 +66,6 @@ export const deleteUrl = async (req, res) => {
   try {
     const { rows: url, rowCount } = await db.query(getUrlById(), [id]);
     if (rowCount < 1) return res.sendStatus(404);
-
 
     const isUnauthorizedToDeleteUrl = url[0].userId !== user.id;
     if (isUnauthorizedToDeleteUrl) return res.sendStatus(401);

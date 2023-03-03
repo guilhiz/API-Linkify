@@ -1,5 +1,5 @@
 import db from "../database/database.js";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 import chalk from "chalk";
 import hashPassword from "../utils/hashPassword.js";
 import internalError from "../utils/internalError.js";
@@ -10,7 +10,7 @@ import { createUser, getUserByEmail, createToken } from "../repositories/userRep
 export const signUp = async (req, res) => {
   const { name, email, password } = req.Params;
   const encryptedPassword = hashPassword(password);
-  console.log(chalk.cyan("POST /users"));
+  console.log(chalk.cyan("POST /signup"));
 
   try {
     await db.query(createUser(), [name, email, encryptedPassword]);
@@ -27,16 +27,18 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
   const { email, password } = req.Params;
-  console.log(email, password);
+  console.log(chalk.cyan("POST /signin"));
   const token = uuid();
 
   try {
-    const { rows: user } = await db.query(getUserByEmail(), [email]);
+    const { rows: user, rowCount } = await db.query(getUserByEmail(), [email]);
+    if (rowCount === 0) return res.sendStatus(401);
+
     const encryptedPassword = user[0].password;
     const match = bcrypt.compareSync(password, encryptedPassword);
 
-    if (user.length < 1 || !match) {
-      return res.status(401).send("verifique se os dados foram inseridos corretamente");
+    if (!match) {
+      return res.sendStatus(401)
     }
 
     await db.query(createToken(), [user[0].id, token]);

@@ -9,7 +9,7 @@ export const tokenValidate = async (req, res, next) => {
 
   try {
     const { rows: user, rowCount } = await db.query(getUserByToken(), [token]);
-    if (rowCount < 1) res.sendStatus(401);
+    if (rowCount === 0) return res.sendStatus(401);
     
     res.locals.user = user[0];
     next();
