@@ -96,7 +96,7 @@ CREATE TABLE public.users (
     name character varying(100) NOT NULL,
     email text NOT NULL,
     password text NOT NULL,
-    "createdAt" date DEFAULT now() NOT NULL
+    "createdAt" timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
@@ -145,46 +145,41 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.sessions VALUES (1, 1, 'b00ab7a2-0f5f-4761-8cc8-377c6c2977e9', true, '2023-03-02 14:31:14.379983');
-INSERT INTO public.sessions VALUES (2, 4, '6caaa77b-a46e-4cc0-a9d0-76f3276a7aeb', true, '2023-03-02 17:22:42.030162');
+INSERT INTO public.sessions VALUES (3, 1, '2848645e-65db-4653-9606-e77a7a8aa700', true, '2023-03-02 23:23:32.178338');
 
 
 --
 -- Data for Name: urls; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.urls VALUES (6, 1, 'RKecODxE', 'https://www.vlr.gg/181296/the-goat-confirmed-loud-is-best-team', 0, '2023-03-02 20:25:59.140706');
-INSERT INTO public.urls VALUES (4, 1, '5lhNHudB', 'https://github.com/guilhiz/API-My-Wallet/blob/main/src/routes/recordRouter.js', 3, '2023-03-02 17:13:23.960798');
-INSERT INTO public.urls VALUES (5, 1, '1K01M-2S', 'https://www.vlr.gg/181297/tuyz-93499-iq-play', 2, '2023-03-02 20:25:44.65614');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.users VALUES (1, 'gui', 'gui@gmail.com', '$2b$08$irq5hd/bt5GWC7QqI20Xjewi3uDdUeWXoP0CrN/rAjwwbJJ.FsYkq', '2023-03-02');
-INSERT INTO public.users VALUES (4, 'gu', 'gu@gmail.com', '$2b$08$g3SIdSuEcahPw8BnNC/8TegRwXDVp1KXgn5VOtpsxmAlSv.t4vSnu', '2023-03-02');
+INSERT INTO public.users VALUES (1, 'gui', 'gui@gmail.com', '$2b$08$Wj/z6iN6RLXWJ8.IQwVRHuONBoxvg7S5XI5WL36Bpi.3uhV.msucC', '2023-03-02 23:23:17.312153');
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 2, true);
+SELECT pg_catalog.setval('public.sessions_id_seq', 3, true);
 
 
 --
 -- Name: urls_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.urls_id_seq', 6, true);
+SELECT pg_catalog.setval('public.urls_id_seq', 7, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 4, true);
+SELECT pg_catalog.setval('public.users_id_seq', 1, true);
 
 
 --
@@ -193,6 +188,14 @@ SELECT pg_catalog.setval('public.users_id_seq', 4, true);
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_email_key UNIQUE (email);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
 
 
 --
