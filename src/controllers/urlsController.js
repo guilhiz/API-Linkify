@@ -8,6 +8,8 @@ import {
   getUrlByShortUrl,
   incrementVisitCount,
   deleteUrlById,
+  getUrlStatisticsByUserId,
+  getTopRankedUsers
 } from "../repositories/urlsRepository.js";
 
 export const shortenUrl = async (req, res) => {
@@ -70,6 +72,31 @@ export const deleteUrl = async (req, res) => {
     await db.query(deleteUrlById(), [id]);
 
     return res.sendStatus(204);
+  } catch (error) {
+    internalError(error, res);
+  }
+};
+
+export const getUrlStatistics = async (req, res) => {
+  const { user } = res.locals;
+  console.log(chalk.cyan("GET /users/me"));
+
+  try {
+    const {rows: result} = await db.query(getUrlStatisticsByUserId(), [user.id]);
+
+    return res.status(200).send(result[0]);
+  } catch (error) {
+    internalError(error, res);
+  }
+};
+
+export const getRanking = async (req, res) => {
+  console.log(chalk.cyan("GET /users/me"));
+
+  try {
+    const {rows: result} = await db.query(getTopRankedUsers());
+
+    return res.status(200).send(result);
   } catch (error) {
     internalError(error, res);
   }
