@@ -1,4 +1,5 @@
 import express, { json } from "express";
+import helmet from "helmet";
 import router from "./routes/index.js";
 import * as dotenv from "dotenv";
 import chalk from "chalk";
@@ -9,6 +10,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(json());
+app.use(helmet())
 app.use(router);
 
 const port = process.env.PORT || 5000;
