@@ -44,7 +44,6 @@ Linkify é uma API Node.js que permite encurtar URLs, mantendo um registro de vi
 |   ├── 📁repositories
 |   ├── 📁routes
 |   ├── 📁schemas
-|   ├── 📁schema
 |   ├── 📁utils
 |   └── 📄index.js
 |
